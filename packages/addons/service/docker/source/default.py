@@ -10,7 +10,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-sys.path.append('/usr/share/kodi/addons/service.libreelec.settings')
+sys.path.append('/usr/share/kodi/addons/service.lisertv.settings')
 import oe
 
 __author__      = 'lrusak'

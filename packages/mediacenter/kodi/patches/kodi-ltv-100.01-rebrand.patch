@@ -1,0 +1,343 @@
+diff --git a/addons/skin.estuary/xml/Settings.xml b/addons/skin.estuary/xml/Settings.xml
+index 18ad10234b..9227cbe2ce 100644
+--- a/addons/skin.estuary/xml/Settings.xml
++++ b/addons/skin.estuary/xml/Settings.xml
+@@ -112,10 +112,10 @@
+ 						<icon>icons/settings/system.png</icon>
+ 					</item>
+ 					<item>
+-						<label>LibreELEC</label>
+-						<onclick>RunAddon(service.libreelec.settings)</onclick>
+-						<icon>icons/settings/libreelec.png</icon>
+-						<visible>System.HasAddon(service.libreelec.settings)</visible>
++						<label>LiserTV</label>
++						<onclick>RunAddon(service.lisertv.settings)</onclick>
++						<icon>icons/settings/lisertv.png</icon>
++						<visible>System.HasAddon(service.lisertv.settings)</visible>
+ 					</item>
+ 				</content>
+ 			</control>
+diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
+index 6964c72..e41d002 100644
+--- a/addons/skin.estuary/xml/Home.xml
++++ b/addons/skin.estuary/xml/Home.xml
+@@ -1069,18 +1069,12 @@
+ 				<top>30</top>
+ 				<left>90</left>
+ 				<control type="image">
+-					<aspectratio>keep</aspectratio>
+-					<width>56</width>
+-					<height>56</height>
+-					<texture colordiffuse="button_focus">icons/logo.png</texture>
+-				</control>
+-				<control type="image">
+-					<left>40</left>
+-					<top>10</top>
++					<left>16</left>
++					<top>8</top>
+ 					<aspectratio>keep</aspectratio>
+-					<width>192</width>
+-					<height>36</height>
+-					<texture>icons/logo-text.png</texture>
++					<width>255</width>
++					<height>50</height>
++					<texture>icons/lisertv.png</texture>
+ 				</control>
+ 			</control>
+ 		</control>
+diff --git a/addons/skin.estuary/xml/DialogBusy.xml b/addons/skin.estuary/xml/DialogBusy.xml
+index 1d96d50..1005081 100644
+--- a/addons/skin.estuary/xml/DialogBusy.xml
++++ b/addons/skin.estuary/xml/DialogBusy.xml
+@@ -10,7 +10,7 @@
+ 			<control type="image">
+ 				<texture>colors/black.png</texture>
+ 				<include>FullScreenDimensions</include>
+-				<animation effect="fade" start="100" end="70" time="0" condition="true">Conditional</animation>
++				<animation effect="fade" start="100" end="20" time="0" condition="true">Conditional</animation>
+ 				<animation effect="fade" start="100" end="0" time="0" condition="Window.IsVisible(fullscreenvideo) | Window.IsVisible(FullscreenGame)">Conditional</animation>
+ 			</control>
+ 			<control type="group">
+@@ -19,23 +19,17 @@
+ 				<centertop>50%</centertop>
+ 				<width>80</width>
+ 				<height>80</height>
+-				<control type="image">
+-					<centerleft>50%</centerleft>
+-					<centertop>50%</centertop>
+-					<width>80</width>
+-					<height>80</height>
+-					<aspectratio>keep</aspectratio>
+-					<animation effect="rotate" end="-45" center="auto" time="200" delay="600" loop="true" reversible="false" condition="true">Conditional</animation>
+-					<texture colordiffuse="button_focus">spinner.png</texture>
+-				</control>
+-				<control type="image">
++				<control type="multiimage" description="Busy animation">
+ 					<centerleft>50%</centerleft>
+ 					<centertop>50%</centertop>
+-					<width>50</width>
+-					<height>50</height>
++					<width>70</width>
++					<height>70</height>
++					<imagepath>spinner/multi</imagepath>
++					<timeperimage>80</timeperimage>
++					<fadetime>0</fadetime>
++					<loop>yes</loop>
++					<randomize>false</randomize>
+ 					<aspectratio>keep</aspectratio>
+-					<animation effect="rotate" end="45" center="auto" time="200" delay="600" loop="true" reversible="false" condition="true">Conditional</animation>
+-					<texture flipx="true" colordiffuse="button_focus">spinner.png</texture>
+ 				</control>
+ 				<control type="image">
+ 					<centerleft>50%</centerleft>
+diff --git a/addons/webinterface.default/js/kodi-webinterface.js b/addons/webinterface.default/js/kodi-webinterface.js
+index 7e5160b..0c08215 100644
+--- a/addons/webinterface.default/js/kodi-webinterface.js
++++ b/addons/webinterface.default/js/kodi-webinterface.js
+@@ -6,7 +6,7 @@ this.helpers = {};
+ 
+ this.config = {
+   "static": {
+-    appTitle: 'Kodi',
++    appTitle: 'LiserTV',
+     jsonRpcEndpoint: 'jsonrpc',
+     socketsHost: location.hostname,
+     socketsPort: 9090,
+diff --git a/xbmc/network/upnp/UPnP.cpp b/xbmc/network/upnp/UPnP.cpp
+index d6d09bc..333d442 100644
+--- a/xbmc/network/upnp/UPnP.cpp
++++ b/xbmc/network/upnp/UPnP.cpp
+@@ -631,12 +631,12 @@ CUPnP::CreateServer(int port /* = 0 */)
+                     CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(CSettings::SETTING_SERVICES_WEBSERVERPORT),
+                     "/").ToString();
+ 
+-    device->m_ModelName        = "Kodi";
++    device->m_ModelName        = "LiserTV";
+     device->m_ModelNumber      = CSysInfo::GetVersion().c_str();
+-    device->m_ModelDescription = "Kodi - Media Server";
+-    device->m_ModelURL         = "http://kodi.tv/";
+-    device->m_Manufacturer     = "XBMC Foundation";
+-    device->m_ManufacturerURL  = "http://kodi.tv/";
++    device->m_ModelDescription = "LiserTV - Media Server";
++    device->m_ModelURL         = "https://github.com/Leverex";
++    device->m_Manufacturer     = "Leverex";
++    device->m_ManufacturerURL  = "https://github.com/Leverex";
+ 
+     device->SetDelegate(device);
+     return device;
+@@ -715,12 +715,12 @@ CUPnP::CreateRenderer(int port /* = 0 */)
+         NPT_HttpUrl(m_IP.c_str(),
+                     CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(CSettings::SETTING_SERVICES_WEBSERVERPORT),
+                     "/").ToString();
+-    device->m_ModelName        = "Kodi";
++    device->m_ModelName        = "LiserTV";
+     device->m_ModelNumber      = CSysInfo::GetVersion().c_str();
+-    device->m_ModelDescription = "Kodi - Media Renderer";
+-    device->m_ModelURL         = "http://kodi.tv/";
+-    device->m_Manufacturer     = "XBMC Foundation";
+-    device->m_ManufacturerURL  = "http://kodi.tv/";
++    device->m_ModelDescription = "LiserTV - Media Renderer";
++    device->m_ModelURL         = "https://github.com/Leverex";
++    device->m_Manufacturer     = "Leverex";
++    device->m_ManufacturerURL  = "https://github.com/Leverex";
+ 
+     return device;
+ }
+diff --git a/system/peripherals.xml b/system/peripherals.xml
+index 1978f07..6a101f6 100644
+--- a/system/peripherals.xml
++++ b/system/peripherals.xml
+@@ -12,7 +12,7 @@
+     <setting key="enabled" type="bool" value="1" label="305" order="1" />
+     <setting key="activate_source" type="bool" value="1" label="36020" order="2" />
+     <setting key="wake_devices" type="enum" value="36037" label="36007" lvalues="36037|36038|36039|231" order="3" />
+-    <setting key="standby_devices" type="enum" value="36037" label="36008" lvalues="36037|36038|36039|231" order="4" />
++    <setting key="standby_devices" type="enum" value="231" label="36008" lvalues="36037|36038|36039|231" order="4" />
+     <setting key="send_inactive_source" type="bool" value="1" label="36025" order="5" />
+     <setting key="cec_standby_screensaver" type="bool" value="0" label="36009" order="6" />
+     <setting key="cec_wake_screensaver" type="bool" value="1" label="36010" order="7" />
+@@ -27,7 +27,7 @@
+     <setting key="power_avr_on_as" type="bool" label="36046" value="0" order="15" />
+ 
+     <setting key="tv_vendor" type="int" value="0" configurable="0" />
+-    <setting key="device_name" type="string" value="Kodi" configurable="0" />
++    <setting key="device_name" type="string" value="LiserTV" configurable="0" />
+     <setting key="device_type" type="int" value="1" configurable="0" />
+     <setting key="wake_devices_advanced" type="string" value="" configurable="0" />
+     <setting key="standby_devices_advanced" type="string" value="" configurable="0" />
+
+diff --git a/addons/skin.estuary/media/icons/logo.png b/addons/skin.estuary/media/icons/logo.png
+deleted file mode 100644
+index 5b3796ecce11569eae5e4e164606fa638ee4c9d6..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1139
+zcmV-(1dRKMP)<h;3K|Lk000e1NJLTq003|R003|Z1ONa4Z0S6}000C!Nkl<Zc-rmT
+z&r4KM6bJB|1eq<gAJV1>QGymOiiyZvM2m{3HU(|k1TCeOh1jBhAR;1iQ3x$s)h1{W
+z7?cD;WRns_QA#P4CYmHxh~E~YInBHu=iT=`)0uJ3ESwqUzImU8@7{O5cN|>F9{ceS
+zKQWC*I8?fCE!7vT#ZBZ_H`Z1XumOE2tUfeU3UD*B2&$LZR0+VXc#E*g>Jznj%@{^h
+zsS|a1J1~a0QYLEhc47jOQYGr~+AsxaDH64K2k-+)N{y()JBm3ZEhVA`?-YK)r&Nf1
+z-Wklpw-ktMUI!MCrsza2?;_F{naJcF0jH=$9<K(k!KxRiw+B1{X7!=g8t?(Q)ol&<
+z9qc-23&^kDN(W9?I`Ctq1G_34_=?k5v<e(Yv$bi0dwI#&TgmWh2JIHtq9%FvfMlLE
+zAf0CmsKB!XRN+a1tI&Zlj9{A@P>Cl4*5KCSX<SnRN_n;D#4zUZ94DE;8+pqo4WN|Q
+zf}y-oJ+h@-{6{+T4*E?2DCO-cigKPwGUB)ooG&;i8z|+qV>)2;02<Q)&la_Dxj;E@
+zCbY%a=np&{(1d3K)AIzxs5W3w#=rw|c(KIrE_HB1!~*hoF~qR=ayH~p93Yn$Nem93
+zXG0If0P=Ye#NxLyffr;RP=^;vEPSIiW@kiNpdK%T`0vZ@_!4u7bU<BRATj?%6F$ct
+zAPrET7eHKox&<Eu!~KD!;S~{=o-{^mnPUJ;$15P_{;bEKaHt<p%4?(Wa>NbGz%}R>
+z5A*>_dAlPgsHD}8x+UP%1jCX8<+rmF;MVmVaBrfWElGh=UOnE^<C_KSgLAl-Xizes
+zyp?nX8g(DeVUz@%Pt_?KQvpuGxrEoP@Kc;j)d>8g0{ji<&`Sairs{KERslYNb2v@{
+zcISO+DsdaPPPouWR>yMF#9az-&)=)@JG6TApj$9b=JhPigLRaN-r*d^@CKK#&a=&)
+z(VFNT8bW@Xk_^b$$j)1;Z7f`DXAJ<=7Ta>7D+6NS?UIz}%o9Uzcx6OqoEX`%kPw||
+zVr<hXp6Cn{MQy`4qW=jePiK`HztKcro>w}n)w+)&`tdx|S-tQjoap!8<eAQD#%Ezf
+z=EWjQA$kX(!9?!0Fg-C<gk4OWqhIRfM3qelg~SnsnM_Jl+D4M=dp}(~<Q<iXT1srf
+zK;Ed^vLFA*PIfiA@D-y8?$jxhbiiWa0){Y&$2k0df5S^!W?B6WFKwZ06G*((u?VEz
+ztl9&T+YQ!$^oEfwph7xp38<3J+5sx1vsQp=>8ur?S~_b5sFu!J0jj05R)A{htQDYI
+zI%{c~P)TPkP4t<{p6Hd*+3I4udb?D;;jOkTR$$X<1+)$I8o!2s8m)U{Kz8_I5Xg+r
+zi~?B!s9_)@!Zr>}y9uETfN8dolnKx?oh>JzS31jh`~k+9^q*ltifI4<002ovPDHLk
+FV1iO&4HW<Y
+
+diff --git a/addons/skin.estuary/media/icons/logo-text.png b/addons/skin.estuary/media/icons/logo-text.png
+deleted file mode 100644
+index d263e42edbb011e1acf8556e479b6396ccf024be..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1015
+zcmV<T0|@+yP)<h;3K|Lk000e1NJLTq003|R001Ni1ONa4`}TGr000BNNkl<ZSi{ws
+zOKeP09L8@ALz`eh#UP<2ghZ^Q2uWX7Vuk3~kf`^Hjg`mJD|RH5hNNv`LoDn>yU>}Y
+zswHSE781fjrU_wCk@;CPnfpKY-gED{4`R;QOme^bo%7u}|L3vDF*R~nfwPKB*kh8J
+z8eAQR>EbB`CYhwbQ@S`zoxut@^y34A+@PIBA$W3@AP9OXO}9Y*=9mX2MV5X_o*OLD
+zPnMML8YZJeFFToL#$zsU4i5$PCp$bat&9b3Z;aNM0;k4vnv)cmVMHLm(&9qQ;+pa1
+zt}!dNKqzrVYa}5BuHvo06<F^=)G`=qbA!~z76_1Metdx&C<xR$R(r@BcP#vx^R$p5
+zO_~fXoaeOzG43f*zZ)ITOMjkVf!ir67PQobs9``^vX3pEOk3zva0AqY5a`EK9bI5M
+zzXf8*^J{eo#19Tp<r8KO@k5|HA_;W!T#YL5jPj)(G27E~+GB!^fx%`Y6XK25NCMqF
+zTf+-Xab1yj&(rfwW3-GY(qIsREgHn3A9KV-bAc+)DAU6Utl_>Q@1`a|X9cF+NZ!=J
+zw?{UzK$T~A7=iN~Dbq!*T|E}ArOH@fm2eaNF$7AUoVmbdN<LEJq;`Qik(6yVmS<tH
+zS@73K7O3*nnF(CSM<wI*J9tORxM!i{Sy((Pzk4Kxz(5`+Wiwxt!};DLR@t+wj5{4#
+z;OX+aU9kk(Jl(+p+n97EL$`d$?fkSUw7|ylyTh>r+B_pc0*`CToV{9dJB7=H7MKyy
+zGmgLj9$k9-P5dshMni7@-|5f-)1q*WBQSu+($s9rmFnP?#u6)3;1g=GSi+}3ORUHv
+zYG<5{N}|2@uQ{2Kf8}HV?kY9%i2zINju9qKB@`x3nTH9ljPs7KC01CVzu=Kg*6_l|
+z66-55Rddc2eD<-#sL6J3LdkY-lw{jEw~7DBX^FC2I%q8LU_#}R<Y|l3RXeM-#FVH!
+zDyrah9)$;5OKepdiVX(aDwwnylHxI?oXZ=5+^0P26i>bfHl2!!*N)zFDkjl%l5?$~
+zR4vinHr(XNut~UtIBmmFJYf#SZh;+DNZpO!G0xG%LS`_7g*0)_b!!o}@vGx`6}Ry#
+z=VgJutvp%4P^gys5DOA%-47(ux|cq)Piu+Qm3;Xk5951bi7OpXx4Mq1dyKn0-hXj@
+zX3zDa3e3AaW{NC1O=kdd>`CYXbeH)BXuiBz(>!FqSZuMTop_WUhAHriUlbUohoeSU
+l*!h4f>`o47*7WAd{{i!$1IJeHOfvug002ovPDHLkV1g`u;wS(B
+
+diff --git a/addons/skin.estuary/media/icons/settings/lisertv.png b/addons/skin.estuary/media/icons/settings/lisertv.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..b3e24298315f193a409a4ebfdf5d2ad20a6d4c8b
+GIT binary patch
+literal 2111
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/addons/skin.estuary/media/icons/lisertv.png b/addons/skin.estuary/media/icons/lisertv.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..8836cbe1d7a074a972aefb75625c99aed35ae068
+GIT binary patch
+literal 3321
+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
+DC%;uR
+
+literal 0
+HcmV?d00001
+

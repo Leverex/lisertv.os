@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.lisertv.addons"
+		name="LiserTV Add-ons"
+		version="@ADDON_VERSION@"
+		provider-name="Leverex">
+	<extension point="xbmc.addon.repository"
+		name="LiserTV Add-ons">
+		<info>@ADDON_URL@/addons.xml.gz</info>
+		<checksum verify="sha256">@ADDON_URL@/addons.xml.gz.sha256</checksum>
+		<datadir zip="true">@ADDON_URL@</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>LiserTV Add-ons</summary>
+		<description>The LiserTV add-on repository contains Kodi PVR Clients and Servers, Screensavers, Visualisations, and more. If you find a broken or non-working add-on please report it via the forums, or help by submitting fixes via GitHub.</description>
+		<platform>all</platform>
+	</extension>
+</addon>

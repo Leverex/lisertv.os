@@ -146,10 +146,10 @@ echo "${TARGET_VERSION}" > ${INSTALL}/etc/release
 cat <<EOF >${INSTALL}/etc/os-release
 NAME="${DISTRONAME}"
 VERSION="${LIBREELEC_VERSION}"
-ID="libreelec"
+ID="lisertv"
 VERSION_ID="${OS_VERSION}"
 PRETTY_NAME="${DISTRONAME} (${LIBREELEC_BUILD}): ${LIBREELEC_VERSION}"
-HOME_URL="https://libreelec.tv"
+HOME_URL="https://github.com/Leverex"
 BUG_REPORT_URL="${ORIGIN_URL}"
 BUILD_ID="${GIT_HASH}"
 OPENELEC_ARCH="${LIBREELEC_ARCH}"
