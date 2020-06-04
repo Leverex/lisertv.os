@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: GPL-2.0
+# Copyright (C) 2020-present Leverex (leverex@liser.tv)
+
+dtb="$(${SCRIPTS}/uboot_helper ${PROJECT} ${DEVICE} ${UBOOT_SYSTEM} dtb)"
+
+# Copy device tree blob to part1
+if [ -f "${RELEASE_DIR}/3rdparty/bootloader/${dtb}" ]; then
+  mcopy "${RELEASE_DIR}/3rdparty/bootloader/${dtb}" ::
+fi
+
+# Copy boot.ini to part1
+if [ -f "${RELEASE_DIR}/3rdparty/bootloader/boot.ini" ]; then
+  mcopy "${RELEASE_DIR}/3rdparty/bootloader/boot.ini" ::
+fi
+
+# Write u-boot to disk
+if [ -f "${RELEASE_DIR}/3rdparty/bootloader/u-boot" ] && \
+   [ -f "${RELEASE_DIR}/3rdparty/bootloader/bl1" ]; then
+  echo "Writing u-boot to $(basename ${DISK}) (ODROID-C1 sd fuse)"
+  dd if="${RELEASE_DIR}/3rdparty/bootloader/bl1" of="${DISK}" \
+    conv=fsync,notrunc bs=1 count=442 >"${SAVE_ERROR}" 2>&1 || show_error
+  dd if="${RELEASE_DIR}/3rdparty/bootloader/bl1" of="${DISK}" \
+    conv=fsync,notrunc bs=512 skip=1 seek=1 >"${SAVE_ERROR}" 2>&1 || show_error
+  dd if="${RELEASE_DIR}/3rdparty/bootloader/u-boot" of="${DISK}" \
+    conv=fsync,notrunc bs=512 seek=64 >"${SAVE_ERROR}" 2>&1 || show_error
+fi

@@ -1,0 +1,14 @@
+diff -Naurp linux-fb5b898/drivers/base/regmap/regmap.c linux-fb5b898-patch/drivers/base/regmap/regmap.c
+--- linux-fb5b898/drivers/base/regmap/regmap.c	2016-12-15 18:49:08.000000000 +0200
++++ linux-fb5b898-patch/drivers/base/regmap/regmap.c	2017-02-20 20:33:46.000000000 +0200
+@@ -681,6 +681,10 @@ skip_format_initialization:
+ 			unsigned win_max = win_min +
+ 					   config->ranges[j].window_len - 1;
+ 
++			/* Allow data window inside its own virtual range */
++			if (j == i)
++				continue;
++
+ 			if (range_cfg->range_min <= sel_reg &&
+ 			    sel_reg <= range_cfg->range_max) {
+ 				dev_err(map->dev,

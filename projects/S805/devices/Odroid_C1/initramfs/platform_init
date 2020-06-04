@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# Set fallback resolution
+mode="720p"
+bpp=32
+xres=1280
+yres=720
+
+# Parse command line arguments
+for arg in $(cat /proc/cmdline); do
+  case $arg in
+    video_bpp=*)    bpp="${arg#*=}" ;;
+    video_output=*) mode="${arg#*=}" ;;
+  esac
+done
+
+echo "$mode" > /sys/class/display/mode
+
+# Set framebuffer geometry to match the resolution
+case $mode in
+  480*)  xres=720 yres=480 ;;
+  576*)  xres=720 yres=576 ;;
+  720*)  xres=1280 yres=720 ;;
+  800*)  xres=1280 yres=800 ;;
+  1080*) xres=1920 yres=1080 ;;
+esac
+
+xres_virtual=$xres
+yres_virtual=$(($yres * 2))
+
+fbset -fb /dev/fb0 -g $xres $yres $xres_virtual $yres_virtual $bpp
+fbset -fb /dev/fb1 -g 32 32 32 32 32
+
+echo 0 > /sys/class/graphics/fb0/free_scale
+echo 0 > /sys/class/graphics/fb1/free_scale
+echo 1 > /sys/class/graphics/fb0/freescale_mode
+
+M="0 0 $((xres - 1)) $((yres - 1))"
+
+echo "$M" > /sys/class/graphics/fb0/free_scale_axis
+echo "$M" > /sys/class/graphics/fb0/window_axis
+echo 0x10001 > /sys/class/graphics/fb0/free_scale
+
+# Include deinterlacer into default VFM map
+echo rm default > /sys/class/vfm/map
+echo add default decoder ppmgr deinterlace amvideo > /sys/class/vfm/map
+
+echo 1 > /sys/class/video/disable_video
+echo 0 > /sys/class/ppmgr/ppscaler
+
+# Enable first framebuffer
+echo 0 > /sys/class/graphics/fb0/blank
+
+# Disable second framebuffer
+echo 1 > /sys/class/graphics/fb1/blank
+
+# DEC_CONTROL_FLAG_DISABLE_FAST_POC
+echo 4 > /sys/module/amvdec_h264/parameters/dec_control
+
+# Prevent block device I/O from contributing to the entropy pool
+for block in /sys/block/*/queue/add_random; do
+  echo 0 > "$block"
+done
+
+# Include I/O activity in cpu activity calculations
+if [ -f /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy ]; then
+  echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+fi
+
+# Disable blue led
+echo none > /sys/class/leds/blue\:heartbeat/trigger
+
+# Network Tweaks. Thanks to mlinuxguy
+#echo 32768 > /proc/sys/net/core/rps_sock_flow_entries
+#echo 2048 > /sys/class/net/eth0/queues/rx-0/rps_flow_cnt
+#echo 7 > /sys/class/net/eth0/queues/rx-0/rps_cpus
+#echo 7 > /sys/class/net/eth0/queues/tx-0/xps_cpus
+
+# Move IRQ's of ethernet to CPU1/2
+echo 1,2 > /proc/irq/40/smp_affinity_list

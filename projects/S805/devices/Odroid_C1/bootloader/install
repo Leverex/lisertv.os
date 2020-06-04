@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: GPL-2.0
+# Copyright (C) 2020-present Leverex (leverex@liser.tv)
+
+cp -av "sd_fuse/u-boot.bin" "${INSTALL}/usr/share/bootloader/u-boot"
+cp -av "sd_fuse/bl1.bin.hardkernel" "${INSTALL}/usr/share/bootloader/bl1"
+find_file_path config/boot.ini && cp -av "${FOUND_PATH}" "${INSTALL}/usr/share/bootloader/"

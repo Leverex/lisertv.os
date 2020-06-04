@@ -32,6 +32,11 @@ devices = {
       'orangepi_one_plus' : { 'dtb' : 'sun50i-h6-orangepi-one-plus.dtb', 'config' : 'orangepi_one_plus_defconfig' },
     },
   },
+  'S805' : {
+    'Odroid_C1' : {
+      'Odroid_C1' : { 'dtb' : 'meson8b_odroidc.dtb', 'config' : 'odroidc_config' },
+    },
+  },
   'Rockchip' : {
     'MiQi' : { 'rk3288' : { 'dtb' : 'rk3288-miqi.dtb', 'config' : 'miqi-rk3288_config' }, },
     'RK3328' : {
