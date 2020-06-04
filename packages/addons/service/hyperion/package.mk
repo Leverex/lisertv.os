@@ -29,6 +29,9 @@ if [ "$PROJECT" = "RPi" ]; then
   PKG_DEPENDS_TARGET+=" bcm2835-driver"
   PKG_DISPMANX_SUPPORT="-DENABLE_DISPMANX=ON"
   PKG_FB_SUPPORT="-DENABLE_FB=OFF"
+elif [ "$PROJECT" = "S805" ]; then
+  PKG_DEPENDS_TARGET+=" libamcodec"
+  PKG_AMLOGIC_SUPPORT="-DENABLE_AMLOGIC=ON"
 elif [ "$DISPLAYSERVER" = "x11" ]; then
   PKG_DEPENDS_TARGET+=" xorg-server xrandr"
   PKG_X11_SUPPORT="-DENABLE_X11=ON"
@@ -36,7 +39,7 @@ fi
 
 PKG_CMAKE_OPTS_TARGET="-DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON \
                        -DHYPERION_VERSION_ID="$PKG_VERSION" \
-                       -DENABLE_AMLOGIC=OFF \
+                       $PKG_AMLOGIC_SUPPORT \
                        $PKG_DISPMANX_SUPPORT \
                        $PKG_FB_SUPPORT \
                        -DENABLE_OSX=OFF \
