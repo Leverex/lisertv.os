@@ -28,6 +28,12 @@ case "$LINUX" in
     PKG_URL="https://github.com/raspberrypi/linux/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="linux-$LINUX-$PKG_VERSION.tar.gz"
     ;;
+  custom)
+    PKG_VERSION="$KERNEL_CUSTOM_VERSION"
+    PKG_SHA256="$KERNEL_CUSTOM_SHA256"
+    PKG_URL="$KERNEL_CUSTOM_URL"
+    PKG_SOURCE_NAME="$KERNEL_CUSTOM_SOURCE_NAME"
+    ;;
   *)
     PKG_VERSION="5.1.16"
     PKG_SHA256="8a3e55be3e788700836db6f75875b4d3b824a581d1eacfc2fcd29ed4e727ba3e"
