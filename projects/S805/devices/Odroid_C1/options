@@ -46,6 +46,7 @@
     UBOOT_CUSTOM_SHA256="4f2f7d313e9eb799a0e38a1817da2cbb0b9478a35981ad4988e4ced609c0eaac"
     UBOOT_CUSTOM_URL="https://github.com/hardkernel/u-boot/archive/$UBOOT_CUSTOM_VERSION.tar.gz"
     UBOOT_SYSTEM="Odroid_C1"
+    UBOOT_LINARO_TOOLCHAIN="arm-linux-gnueabihf"
 
   # Kernel target for u-boot (default 'uImage' if BOOTLOADER=u-boot) (uImage / zImage)
     KERNEL_TARGET="uImage"

@@ -30,7 +30,6 @@ case "$PROJECT" in
     PKG_VERSION="$UBOOT_CUSTOM_VERSION"
     PKG_SHA256="$UBOOT_CUSTOM_SHA256"
     PKG_URL="$UBOOT_CUSTOM_URL"
-    PKG_DEPENDS_TARGET+=" gcc-arm-$KERNEL_TOOLCHAIN:host"
     ;;
   *)
     PKG_VERSION="2019.04"
@@ -38,6 +37,11 @@ case "$PROJECT" in
     PKG_URL="http://ftp.denx.de/pub/u-boot/u-boot-$PKG_VERSION.tar.bz2"
     ;;
 esac
+
+if [ -n "$UBOOT_LINARO_TOOLCHAIN" ]; then
+  PKG_DEPENDS_TARGET+=" gcc-linaro-$UBOOT_LINARO_TOOLCHAIN:host"
+  TARGET_UBOOT_PREFIX=$TOOLCHAIN/lib/gcc-linaro-$UBOOT_LINARO_TOOLCHAIN/bin/$UBOOT_LINARO_TOOLCHAIN-
+fi
 
 post_patch() {
   if [ -n "$UBOOT_SYSTEM" ] && find_file_path bootloader/config; then
@@ -55,9 +59,10 @@ make_target() {
   else
     [ "${BUILD_WITH_DEBUG}" = "yes" ] && PKG_DEBUG=1 || PKG_DEBUG=0
     [ -n "$ATF_PLATFORM" ] &&  cp -av $(get_build_dir atf)/bl31.bin .
-    DEBUG=${PKG_DEBUG} CROSS_COMPILE="$TARGET_KERNEL_PREFIX" LDFLAGS="" ARCH=arm make mrproper
-    DEBUG=${PKG_DEBUG} CROSS_COMPILE="$TARGET_KERNEL_PREFIX" LDFLAGS="" ARCH=arm make $($ROOT/$SCRIPTS/uboot_helper $PROJECT $DEVICE $UBOOT_SYSTEM config)
-    DEBUG=${PKG_DEBUG} CROSS_COMPILE="$TARGET_KERNEL_PREFIX" LDFLAGS="" ARCH=arm _python_sysroot="$TOOLCHAIN" _python_prefix=/ _python_exec_prefix=/ make HOSTCC="$HOST_CC" HOSTLDFLAGS="-L$TOOLCHAIN/lib" HOSTSTRIP="true" CONFIG_MKIMAGE_DTC_PATH="scripts/dtc/dtc"
+    [ -z "$TARGET_UBOOT_PREFIX" ] && TARGET_UBOOT_PREFIX=$TARGET_KERNEL_PREFIX
+    DEBUG=${PKG_DEBUG} CROSS_COMPILE="$TARGET_UBOOT_PREFIX" LDFLAGS="" ARCH=arm make mrproper
+    DEBUG=${PKG_DEBUG} CROSS_COMPILE="$TARGET_UBOOT_PREFIX" LDFLAGS="" ARCH=arm make $($ROOT/$SCRIPTS/uboot_helper $PROJECT $DEVICE $UBOOT_SYSTEM config)
+    DEBUG=${PKG_DEBUG} CROSS_COMPILE="$TARGET_UBOOT_PREFIX" LDFLAGS="" ARCH=arm _python_sysroot="$TOOLCHAIN" _python_prefix=/ _python_exec_prefix=/ make HOSTCC="$HOST_CC" HOSTLDFLAGS="-L$TOOLCHAIN/lib" HOSTSTRIP="true" CONFIG_MKIMAGE_DTC_PATH="scripts/dtc/dtc"
   fi
 }
 
